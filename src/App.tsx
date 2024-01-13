@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import languages from './languages.json'
 
 function App() {
 
+
   const [sourceLanguage, setSourceLanguage] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('');
   const [textInput, setTextInput] = useState('');
   const [translatedText, setTransText] = useState('Translated text will appear here')
-  let temp: any;
 
   const handleSourceLanguageChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setSourceLanguage(event.target.value);
@@ -24,12 +24,8 @@ function App() {
 
   const handleTranslateButtonClick = () => {
 
-    console.log('Source Language:', sourceLanguage);
-    console.log('Target Language:', targetLanguage);
-    console.log('Text Input:', textInput);
-
     if (sourceLanguage && targetLanguage && textInput) {
-      const apiUrl = 'http://localhost:5000/'
+      const apiUrl = 'http://locahost:5000/'
       fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -39,23 +35,16 @@ function App() {
       })
         .then(response => response.json())
         .then(data => {
-
-          console.log('API response:', data);
-          temp = data
-          console.log(translatedText);
+          setTransText(data)
         })
         .catch(error => {
-
           console.error('Error making API call:', error);
+          setTransText('Sorry, we can\'t connect to the API at the moment, please try again in some time')
         });
-
-
     }
     else
       console.log('Can\'t make the call')
   }
-
-  useEffect(() => setTransText(temp), [temp])
 
   return (
     <div className="container">
@@ -96,7 +85,7 @@ function App() {
 
             <div className="output-area">
               <label>Translated Text</label>
-              <textarea readOnly rows={4}>{translatedText}</textarea>
+              <textarea readOnly rows={4} value={translatedText} />
             </div>
           </div>
         </div>
